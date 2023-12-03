@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 // --- Day 1: Trebuchet?! ---
@@ -1032,6 +1033,10 @@ var input = []string{
 "four289",
 }
 
+type Temp struct {
+  index int
+  value int
+}
 
 func main() {
   sum := 0
@@ -1042,6 +1047,19 @@ func main() {
     sum += digit
   }
   fmt.Println(sum) //ANSWER: 54597
+
+  sum = 0
+  for _, line := range input {
+    str := GetNumbersFromStrings(line)
+    myVal, err := strconv.Atoi(str); if err != nil {
+      sum += 0
+    } else {
+      sum += myVal
+    }
+  }
+  fmt.Println(sum) //ANSWER: 54597 - 45382
+
+  // GetNumbersFromStrings("one2two3four")
 }
 
 func grabCalibrationValueFromLine(line string) (int, error) {
@@ -1070,4 +1088,82 @@ func grabCalibrationValueFromLine(line string) (int, error) {
   }
 
   return strconv.Atoi(firstDigit + lastDigit)
+}
+
+func GetNumbersFromStrings(line string) string {
+  numericStringValues := []string{
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+  }
+
+  ht := make(map[string]int)
+  ht["one"] = 1
+  ht["two"] = 2
+  ht["three"] = 3
+  ht["four"] = 4
+  ht["five"] = 5
+  ht["six"] = 6
+  ht["seven"] = 7
+  ht["eight"] = 8
+  ht["nine"] = 9
+
+  var vals []Temp
+  var firstDigit, secondDigit Temp
+  for i:=0; i < len(numericStringValues); i++ {
+    if strings.Contains(line, numericStringValues[i]) {
+      index := strings.Index(line, numericStringValues[i])
+      lastIndex := strings.LastIndex(line, numericStringValues[i])
+      value := ht[numericStringValues[i]]
+      if firstDigit.value == 0 || index < firstDigit.index {
+        firstDigit.index = index
+        firstDigit.value = ht[numericStringValues[i]]
+      }
+      if secondDigit.index < index {
+        secondDigit.index = index
+        secondDigit.value = ht[numericStringValues[i]]
+      }
+      if secondDigit.index < lastIndex {
+        secondDigit.index = lastIndex
+        secondDigit.value = ht[numericStringValues[i]]
+      }
+      vals = append(vals, Temp{index, value})
+    }
+  }
+
+  fmt.Println(firstDigit, secondDigit)
+
+  for j:=0; j < len(line); j++ {
+    _, err := strconv.Atoi(string(line[j])); if err == nil{
+      myVal, _ := strconv.Atoi(string(line[j]))
+      if firstDigit.value == 0 || firstDigit.index > j {
+        fmt.Println("HIT")
+        firstDigit.index = j
+        firstDigit.value = myVal
+      }
+      if secondDigit.index < j {
+        fmt.Println("HIT2")
+        secondDigit.index = j
+        secondDigit.value = myVal
+      }
+      vals = append(vals, Temp{j, myVal})
+    }
+  }
+
+  if secondDigit.value == 0 {
+    secondDigit.value = firstDigit.value
+  }
+  if firstDigit.value == 0 {
+    firstDigit.value = secondDigit.value
+  }
+
+  returnVal := strconv.Itoa(firstDigit.value) + strconv.Itoa(secondDigit.value)
+  fmt.Println(vals)
+  return returnVal
 }
