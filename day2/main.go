@@ -23,7 +23,7 @@ func main() {
     if line == "" {
       continue
     }
-    sum += PartOne(line)
+    sum += PartTwo(line)
   }
 
   fmt.Println(sum)
@@ -53,6 +53,23 @@ func PartOne(line string) int {
   return gameId
 }
 
-func PartTwo() {
+func PartTwo(line string) int {
+  dp := make(map[string]int, 3)
+  dp["red"] = 0
+  dp["green"] = 0
+  dp["blue"] = 0
 
+  splitArr := strings.Split(strings.Split(line, ":")[1], ";")
+  for _, game := range splitArr {
+    for _, cube := range strings.Split(game, ",") {
+      cube = strings.Trim(cube, " ")
+      values := strings.Split(cube, " ")
+      intVal, _ := strconv.Atoi(values[0])
+      if dp[values[1]] < intVal {
+        dp[values[1]] = intVal
+      }
+    }
+  }
+
+  return dp["red"] * dp["blue"] * dp["green"]
 }
