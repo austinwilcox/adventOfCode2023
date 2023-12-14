@@ -1,0 +1,20 @@
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+)
+
+func main() {
+  file, err := os.ReadFile("./example.txt"); if err != nil {
+    log.Fatal(err)
+  }
+  fileContents := string(file)
+  fmt.Println(fileContents)
+
+}
+
+func PartOne() {
+
+}
