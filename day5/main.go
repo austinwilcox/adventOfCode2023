@@ -35,6 +35,18 @@ func PartOne(fileContents []byte) {
     switch currState {
     case "seed-to-soil map:":
       fmt.Println("correct state")
+    case "soil-to-fertilizer map:":
+      fmt.Println("correct state")
+    case "":
+      fmt.Println("correct state")
+    case "":
+      fmt.Println("correct state")
+    case "":
+      fmt.Println("correct state")
+    case "":
+      fmt.Println("correct state")
+    case "":
+      fmt.Println("correct state")
     }
     if regexp.MustCompile("seeds:").MatchString(line) {
       seedNumbers := strings.Trim(strings.Split(line, ":")[1], " ")
